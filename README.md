@@ -67,10 +67,10 @@ Tabler is fully responsive and compatible with all modern browsers. Thanks to it
 
 We've created this admin panel for everyone who wants to create templates based on our pre-made components. Our mission is to deliver a user-friendly, clear and easy administration panel that can be used by both simple websites and sophisticated systems. The only requirement is basic HTML and CSS (and some [Liquid](https://github.com/Shopify/liquid/wiki)) knowledge — as a reward, you'll be able to manage and visualize different types of data in the easiest possible way!
 
-* **Responsive:** With the support for mobile, tablet and desktop displays, it doesn’t matter what device you’re using. Tabler is responsive in all major browsers.
+* **Responsive:** With the support for mobile, tablet and desktop displays, it doesn't matter what device you're using. Tabler is responsive in all major browsers.
 * **Cross Browser:** Our theme works perfectly with the latest Chrome, Firefox+, Safari, Opera, Edge and mobile browsers. We work hard to provide continuous support for them.
 * **HTML5 & CSS3:** We use only modern web technologies, such as HTML5 and CSS3. Our theme includes some subtle CSS3 animations, which will help you attract attention.
-* **Clean Code:** We followed Bootstrap’s guidelines carefully to make your integration as easy as possible. All code is handwritten and W3C valid.
+* **Clean Code:** We followed Bootstrap's guidelines carefully to make your integration as easy as possible. All code is handwritten and W3C valid.
 * **Demo pages**: Tabler features over 20 individual pages using various components, which gives you the freedom to choose and combine. All components can vary in color and styling that you can easily modify using Sass. Sky is the limit!
 
 ## 📖 Documentation
@@ -201,4 +201,16 @@ Stay up to date by joining our community on <a href="https://x.com/tabler_io" >X
 ## License
 
 See the [LICENSE](https://github.com/tabler/tabler/blob/master/LICENSE) file.
+
+# Deploying to Azure
+
+This project is configured for easy deployment to Azure Static Web Apps. We've created a comprehensive guide for deploying this dashboard to Azure:
+
+1. **Read the detailed guide** - See the [AZURE_DEPLOYMENT.md](AZURE_DEPLOYMENT.md) file for step-by-step instructions.
+
+2. **Setup GitHub Actions** - A workflow file is already included at `.github/workflows/azure-static-web-app.yml`.
+
+3. **Add your deployment token** - After creating your Azure Static Web App resource, add your deployment token as a GitHub secret named `AZURE_STATIC_WEB_APPS_API_TOKEN`.
+
+The deployment process will automatically build the application and deploy it to your Azure Static Web App.
 
