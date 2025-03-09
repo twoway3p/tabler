@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 const db = require('./database/db');
+const fs = require('fs');
 
 const app = express();
 // Use port 9090 to avoid conflicts with other services
@@ -13,10 +14,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Serve static files from multiple locations
-app.use(express.static(path.join(__dirname, '../preview/dist')));
-app.use(express.static(path.join(__dirname, '../core/dist')));
-app.use(express.static(path.join(__dirname, 'public')));
+// Environment-specific static file serving
+if (process.env.NODE_ENV === 'production') {
+  // In production (Azure), serve static files from one location
+  app.use(express.static(path.join(__dirname, 'public/static')));
+  app.use(express.static(path.join(__dirname, 'public')));
+  console.log('Serving static files from production locations');
+} else {
+  // In development, serve from the original locations
+  app.use(express.static(path.join(__dirname, '../preview/dist')));
+  app.use(express.static(path.join(__dirname, '../core/dist')));
+  app.use(express.static(path.join(__dirname, 'public')));
+  console.log('Serving static files from development locations');
+}
 
 // API routes
 
@@ -1172,9 +1182,26 @@ app.get('/api-test', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/api-test.html'));
 });
 
-// For all other routes, serve the main app
+// Catch-all route to handle client-side routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../preview/dist/index.html'));
+  // Only handle HTML requests, not API requests or static files
+  if (req.accepts('html')) {
+    let indexPath;
+    
+    if (process.env.NODE_ENV === 'production') {
+      indexPath = path.join(__dirname, 'public/static/index.html');
+    } else {
+      indexPath = path.join(__dirname, '../preview/dist/index.html');
+    }
+    
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send('Page not found');
+    }
+  } else {
+    res.status(404).send('Not found');
+  }
 });
 
 // Start the server

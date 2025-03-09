@@ -1,0 +1,65 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+          
+      - name: Install preview dependencies
+        run: |
+          cd preview
+          pnpm install
+      
+      - name: Build static files
+        run: |
+          cd preview
+          pnpm run build
+      
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm install
+      
+      - name: Prepare server deployment
+        run: |
+          cd server
+          npm run prepare-deploy
+      
+      - name: Zip artifact for deployment
+        run: |
+          cd server/deploy
+          zip -r ../../release.zip ./*
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'the-dealers-online-app'
+          package: release.zip
+          slot-name: 'production' 
