@@ -39,3 +39,6 @@ packages-zip/
 
 LogFiles/
 deployments/
+server/deploy/
+webapp_logs.zip
+test-release.zip
