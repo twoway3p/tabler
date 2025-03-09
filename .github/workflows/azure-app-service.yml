@@ -46,6 +46,11 @@ jobs:
           cd server
           npm run prepare-deploy
       
+      - name: Install deployment dependencies
+        run: |
+          cd server/deploy
+          npm install --production
+      
       - name: Zip artifact for deployment
         run: |
           cd server/deploy
