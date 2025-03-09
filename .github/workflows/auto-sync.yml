@@ -1,0 +1,45 @@
+name: Auto Sync Repository
+
+on:
+  # Run on a schedule (every day at midnight)
+  schedule:
+    - cron: '0 0 * * *'
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to sync'
+        required: true
+        default: 'main'
+        type: string
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    name: Sync Repository
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+      
+      - name: Fetch latest changes
+        run: |
+          git fetch origin
+          
+      - name: Auto Pull (Schedule)
+        if: github.event_name == 'schedule'
+        run: |
+          git checkout main
+          git pull origin main
+          
+      - name: Auto Pull (Manual)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git checkout ${{ github.event.inputs.branch }}
+          git pull origin ${{ github.event.inputs.branch }} 

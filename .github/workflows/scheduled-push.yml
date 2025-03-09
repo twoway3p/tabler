@@ -1,0 +1,40 @@
+name: Scheduled Auto Push
+
+on:
+  # Run on a schedule (e.g., every 6 hours)
+  schedule:
+    - cron: '0 */6 * * *'
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  scheduled_push:
+    runs-on: ubuntu-latest
+    name: Scheduled Push of Changes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git status --porcelain
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git add .
+          git commit -m "Auto-update from scheduled GitHub Actions run"
+          git push origin main 

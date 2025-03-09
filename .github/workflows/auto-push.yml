@@ -1,0 +1,49 @@
+name: Auto Push Changes
+
+on:
+  # Trigger when changes are detected in specific directories
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        description: 'Commit message'
+        required: true
+        default: 'Auto-update from GitHub Actions'
+        type: string
+      branch:
+        description: 'Branch to push to'
+        required: true
+        default: 'main'
+        type: string
+
+jobs:
+  auto_commit:
+    runs-on: ubuntu-latest
+    name: Detect and Push Changes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.branch }}
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git status --porcelain
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git add .
+          git commit -m "${{ github.event.inputs.commit_message }}"
+          git push origin ${{ github.event.inputs.branch }} 
