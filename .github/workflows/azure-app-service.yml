@@ -49,7 +49,7 @@ jobs:
       - name: Install deployment dependencies
         run: |
           cd server/deploy
-          npm install --production
+          npm install
       
       - name: Zip artifact for deployment
         run: |
