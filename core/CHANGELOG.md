@@ -1,5 +1,27 @@
 # @tabler/core
 
+## 1.2.0
+
+### Minor Changes
+
+- c59bc9d: Add gradient background utilities
+- 92a3afe: Replaced TinyMCE with HugeRTE to address license violation
+- 9bbcb99: Add theme settings wizard
+- b17b488: Add steps light colors
+- 215eaa4: Add Turbo library integration
+
+### Patch Changes
+
+- aea3b0a: Rollback accordion component structure
+- 3fc7b84: Add space between page numbers in pagination
+- 2f8a372: Add Bootstrap components to Tabler JS
+- 9fceadd: Fix tooltip colors in vector maps
+- be1f3d1: Fix broken shape in South Korea flag
+- 473fa38: Apply border radius to `tom-select` on focus
+- 922bb03: Minor spelling and grammar improvements to emails docs
+- e3d68d6: Fix `autosize` and `input mask` plugins to use window scope
+- 6b6617a: Improve README
+
 ## 1.1.1
 
 ### Patch Changes
